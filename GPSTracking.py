@@ -22,6 +22,7 @@ if origFOT in SupportedFOT:
     pass
 else:
     print("Form of Transportation not supported")
+    exit()
 
 
 #Temporary cost values (USD)
