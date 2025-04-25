@@ -45,19 +45,19 @@ TimeDict = {
 }
 
 def GetCO2Em(FOT):
-    if FOT.lower() == "Car":
+    if FOT == "Car":
         fuelUse = distance / mpgavgCar # total fuel use
         CO2Em = CO2pergallon * fuelUse # total CO2 Emissions
         return CO2Em
-    elif FOT.lower() == "Bus":
+    elif FOT == "Bus":
         fuelUse = distance / mpgavgBus
         CO2Em =  CO2pergallon * fuelUse / buspassengers
         return CO2Em
-    elif FOT.lower() == "Train":
+    elif FOT == "Train":
         fuelUse = distance / mpgppavgTrain
         CO2Em = CO2pergallon * fuelUse
         return CO2Em
-    elif FOT.lower() == ("Walk" or "Bike"):
+    elif FOT == ("Walk" or "Bike"):
         return 0
     else:
         return float('inf') # Should change?
@@ -87,11 +87,12 @@ elif priority == "Time":
     best_alt = min(candidates, key=lambda m: TimeDict[m])
 else:
     print("Invalid option")
-
+    exit()
+    
 if best_alt == origFOT:
     print("No better alternative available based on your preferences.")
 else:
-    print(f"Suggested alternative: {best_alt.capitalize()}")
+    print(f"Suggested alternative: {best_alt}")
     print(f"Original CO2 Emissions: {CO2EmDict[origFOT]:.2f} lbs")
     print(f"Alternative CO2 Emissions: {CO2EmDict[best_alt]:.2f} lbs")
     print(f"Cost Save: ${(origCost - CostDict[best_alt]):.2f}")
