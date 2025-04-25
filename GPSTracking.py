@@ -8,13 +8,13 @@ mpgavgBus = 6.5
 mpgppavgTrain = 52 #passenger mpg per passenger of transit train
 
 
-SupportedFOT = ["car" , "bus", "train", "walk", "bike"]
+SupportedFOT = ["Car" , "Bus", "Train", "Walk", "Bike"]
 
 #Get input (temporary)
 buspassengers = 25 #avg number of seats per bus
 distance = float(input("Distance (miles): "))
-origFOT = (input("Form of Transportation (Car, Bus, Train, Walk, Bike): ")).lower()
-priority = (input("Priority (Cost, Emissions, Time): ")).lower()
+origFOT = (input("Form of Transportation (Car, Bus, Train, Walk, Bike): ")).capitalize()
+priority = (input("Priority (Cost, Emissions, Time): ")).capitalize()
 
 
 # Should change this when data is retrieved from maps
@@ -27,37 +27,37 @@ else:
 #Temporary cost values (USD)
 #Should retrieve from API
 CostDict = {
-    "car": 15,
-    "bus": 18,
-    "train": 18,
-    "walk": 0,
-    "bike": 0
+    "Car": 15,
+    "Bus": 18,
+    "Train": 18,
+    "Walk": 0,
+    "Bike": 0
 }
 
 #Temporary time values (minutes) distance / avg speed
 #Should retrieve from API
 TimeDict = {
-    "car": distance / 35, 
-    "bus": distance / 25, 
-    "train": distance / 40, 
-    "walk": distance / 4,
-    "bike": distance / 10,
+    "Car": distance / 35, 
+    "Bus": distance / 25, 
+    "Train": distance / 40, 
+    "Walk": distance / 4,
+    "Bike": distance / 10,
 }
 
 def GetCO2Em(FOT):
-    if FOT.lower() == "car":
+    if FOT.lower() == "Car":
         fuelUse = distance / mpgavgCar # total fuel use
         CO2Em = CO2pergallon * fuelUse # total CO2 Emissions
         return CO2Em
-    elif FOT.lower() == "bus":
+    elif FOT.lower() == "Bus":
         fuelUse = distance / mpgavgBus
         CO2Em =  CO2pergallon * fuelUse / buspassengers
         return CO2Em
-    elif FOT.lower() == "train":
+    elif FOT.lower() == "Train":
         fuelUse = distance / mpgppavgTrain
         CO2Em = CO2pergallon * fuelUse
         return CO2Em
-    elif FOT.lower() == ("walk" or "bike"):
+    elif FOT.lower() == ("Walk" or "Bike"):
         return 0
     else:
         return float('inf') # Should change?
@@ -71,19 +71,19 @@ origTime = TimeDict[origFOT]
 
 candidates = []
 for mode in SupportedFOT:
-    if (distance > 1.5) and (mode in ["walk","bike"]):
+    if (distance > 1.5) and (mode in ["Walk","Bike"]):
         continue
-    if (priority.lower() == "cost") and (CostDict[mode] > 2 * origCost):
+    if (priority == "Cost") and (CostDict[mode] > 2 * origCost):
         continue
-    if (priority.lower() == "time") and (TimeDict[mode] > 2 * origTime):
+    if (priority == "Time") and (TimeDict[mode] > 2 * origTime):
         continue
     candidates.append(mode)
 
-if priority.lower() == "emissions":
+if priority == "Emissions":
     best_alt = min(candidates, key=lambda m: CO2EmDict[m])
-elif priority.lower() == "cost":
+elif priority == "Cost":
     best_alt = min(candidates, key=lambda m: CostDict[m])
-elif priority.lower() == "time":
+elif priority == "Time":
     best_alt = min(candidates, key=lambda m: TimeDict[m])
 else:
     print("Invalid option")
@@ -96,3 +96,4 @@ else:
     print(f"Alternative CO2 Emissions: {CO2EmDict[best_alt]:.2f} lbs")
     print(f"Cost Save: ${(origCost - CostDict[best_alt]):.2f}")
     print(f'Time Save: {(origTime - TimeDict[best_alt]):.2f} minutes')
+
