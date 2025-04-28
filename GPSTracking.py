@@ -22,14 +22,14 @@ def getEmissions():
 
     start = start_entry.get()
     end = end_entry.get()
-    distance = gmaps.distance_matrix(start, end)
+    #APIdistance = gmaps.distance_matrix(start, end)
+    distance = 10
 
     # Should change this when data is retrieved from maps
     if origFOT in SupportedFOT:
         pass
     else:
-        print("Form of Transportation not supported")
-        exit()
+        output.insert("Form of Transportation not supported")
 
 
     #Temporary cost values (USD)
@@ -94,17 +94,18 @@ def getEmissions():
     elif priority == "Time":
         best_alt = min(candidates, key=lambda m: TimeDict[m])
     else:
-        print("Invalid option")
-        exit()
-        
+        emissions.insert("Invalid priority option")
+
+    emissions.delete('1.0', tk.END)    
+    
     if best_alt == origFOT:
-        print("No better alternative available based on your preferences.")
+        emissions.insert(tk.END, "No better alternative available based on your preferences.")
     else:
-        emissions.insert(f"Suggested alternative: {best_alt}")
-        '''print(f"Original CO2 Emissions: {CO2EmDict[origFOT]:.2f} lbs")
-        print(f"Alternative CO2 Emissions: {CO2EmDict[best_alt]:.2f} lbs")
-        print(f"Cost Save: ${(origCost - CostDict[best_alt]):.2f}")
-        print(f'Time Save: {(origTime - TimeDict[best_alt]):.2f} minutes')'''
+        emissions.insert(tk.END, f"Suggested alternative: {best_alt}\n")
+        emissions.insert(tk.END, f"Original CO2 Emissions: {CO2EmDict[origFOT]:.2f} lbs\n")
+        emissions.insert(tk.END, "Alternative CO2 Emissions: {CO2EmDict[best_alt]:.2f} lbs\n")
+        emissions.insert(tk.END, f"Cost Save: ${(origCost - CostDict[best_alt]):.2f}\n")
+        emissions.insert(tk.END, f'Time Save: {(origTime - TimeDict[best_alt]):.2f} minutes\n')
 
 def get_directions():
     start = start_entry.get()
