@@ -1,5 +1,6 @@
 # ECEG 301 - Praxis of Engineering Design
 Bucknell University
+
 Lewisburg, PA
 
 ### Course Info
@@ -15,5 +16,6 @@ Tobey Paccione
 Zoya Zhang
 
 ## Project Information
-*Write a few sentences about your project. This can be done
-later, as you may not quite know all the details yet.*
+This project is intended as an add-on to Google Maps, using their API to pull route data and
+suggesting to the user alternate forms of trasnportation they could take in an effort to be
+more enviromentally friendly. 

@@ -15,7 +15,7 @@ def getEmissions():
 
     SupportedFOT = ["Car" , "Bus", "Train", "Walk", "Bike"]
 
-    #Get input (temporary)
+    #Get input
     buspassengers = 25 #avg number of seats per bus
     origFOT = (transport_entry.get()).capitalize()
     priority = (priority_entry.get()).capitalize()
@@ -120,9 +120,6 @@ def get_directions():
             mode = "walking"
         case "Bike":
             mode = "bicycling"
-        #case _:
-            #output.delete('1.0', tk.END)
-            #output.insert("Form of Transportation not supported")
 
     try:
         output.delete('1.0', tk.END)
@@ -138,8 +135,8 @@ def get_directions():
                 clean_instruction = re.sub(r'<.*?>', '', instruction)
                 output.insert(tk.END, clean_instruction + '\n')
         except IndexError:
-            output.insert(tk.END, "This type of transport is not available between these adresses")
-            
+            output.insert(tk.END, "This type of transport is not available between these addresses")
+
     except Exception as e:
         output.delete('1.0', tk.END)
         output.insert(tk.END, f"Error: Invalid form of transport")
