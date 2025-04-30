@@ -128,16 +128,19 @@ def get_directions():
             mode = "bicycling"
 
     try:
+        output.delete('1.0', tk.END)
         if transit:
             directions = gmaps.directions(start, end, mode="transit", transit_mode= mode)
         else:
             directions = gmaps.directions(start, end, mode=mode)
-        steps = directions[0]['legs'][0]['steps']
-        output.delete('1.0', tk.END)
-        for step in steps:
-            instruction = step['html_instructions']
-            clean_instruction = re.sub(r'<.*?>', '', instruction)
-            output.insert(tk.END, clean_instruction + '\n')
+        try:
+            steps = directions[0]['legs'][0]['steps']
+            for step in steps:
+                instruction = step['html_instructions']
+                clean_instruction = re.sub(r'<.*?>', '', instruction)
+                output.insert(tk.END, clean_instruction + '\n')
+        except IndexError:
+            output.insert(tk.END, "This type of transport is not available between these adresses")
     except Exception as e:
         output.delete('1.0', tk.END)
         output.insert(tk.END, f"Error: {e}")
@@ -169,7 +172,7 @@ output = scrolledtext.ScrolledText(window, wrap=tk.WORD, width=70, height=15)
 output.pack()
 
 tk.Label(window, text="Suggestions:").pack()
-emissions = scrolledtext.ScrolledText(window, wrap=tk.WORD, width=70, height=10)
+emissions = scrolledtext.ScrolledText(window, wrap=tk.WORD, width=60, height=8)
 emissions.pack()
 
 window.mainloop()
