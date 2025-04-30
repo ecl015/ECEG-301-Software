@@ -17,8 +17,8 @@ def getEmissions():
 
     #Get input (temporary)
     buspassengers = 25 #avg number of seats per bus
-    origFOT = transport_entry.get()
-    priority = priority_entry.get()
+    origFOT = (transport_entry.get()).capitalize()
+    priority = (priority_entry.get()).capitalize()
 
     start = start_entry.get()
     end = end_entry.get()
@@ -103,7 +103,7 @@ def getEmissions():
     else:
         emissions.insert(tk.END, f"Suggested alternative: {best_alt}\n")
         emissions.insert(tk.END, f"Original CO2 Emissions: {CO2EmDict[origFOT]:.2f} lbs\n")
-        emissions.insert(tk.END, "Alternative CO2 Emissions: {CO2EmDict[best_alt]:.2f} lbs\n")
+        emissions.insert(tk.END, f"Alternative CO2 Emissions: {CO2EmDict[best_alt]:.2f} lbs\n")
         emissions.insert(tk.END, f"Cost Save: ${(origCost - CostDict[best_alt]):.2f}\n")
         emissions.insert(tk.END, f'Time Save: {(origTime - TimeDict[best_alt]):.2f} minutes\n')
 
@@ -111,29 +111,33 @@ def get_directions():
     start = start_entry.get()
     end = end_entry.get()
     transport = (transport_entry.get()).capitalize()
+    transit = False
 
     match transport:
         case "Car":
             mode = "driving"
-        case "Bus" | "Train":
-            mode = "transit"
-            transport.lower()
+        case "Bus":
+            transit = True
+            mode = "bus"
+        case "Train":
+            transit = True
+            mode = "rail"
         case "Walk":
             mode = "walking"
         case "Bike":
             mode = "bicycling"
 
     try:
-        if transport.islower():
-            directions = gmaps.directions(start, end, mode=mode, transit_mode=transport)
+        if transit:
+            directions = gmaps.directions(start, end, mode="transit", transit_mode= mode)
         else:
             directions = gmaps.directions(start, end, mode=mode)
-            steps = directions[0]['legs'][0]['steps']
-            output.delete('1.0', tk.END)
-            for step in steps:
-                instruction = step['html_instructions']
-                clean_instruction = re.sub(r'<.*?>', '', instruction)
-                output.insert(tk.END, clean_instruction + '\n')
+        steps = directions[0]['legs'][0]['steps']
+        output.delete('1.0', tk.END)
+        for step in steps:
+            instruction = step['html_instructions']
+            clean_instruction = re.sub(r'<.*?>', '', instruction)
+            output.insert(tk.END, clean_instruction + '\n')
     except Exception as e:
         output.delete('1.0', tk.END)
         output.insert(tk.END, f"Error: {e}")
