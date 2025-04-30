@@ -25,13 +25,6 @@ def getEmissions():
     #APIdistance = gmaps.distance_matrix(start, end)
     distance = 10
 
-    # Should change this when data is retrieved from maps
-    if origFOT in SupportedFOT:
-        pass
-    else:
-        output.insert("Form of Transportation not supported")
-
-
     #Temporary cost values (USD)
     #Should retrieve from API
     CostDict = {
@@ -87,6 +80,8 @@ def getEmissions():
             continue
         candidates.append(mode)
 
+    emissions.delete('1.0', tk.END)   
+
     if priority == "Emissions":
         best_alt = min(candidates, key=lambda m: CO2EmDict[m])
     elif priority == "Cost":
@@ -94,10 +89,9 @@ def getEmissions():
     elif priority == "Time":
         best_alt = min(candidates, key=lambda m: TimeDict[m])
     else:
-        emissions.insert("Invalid priority option")
+        emissions.insert(tk.END, "Invalid priority option")
 
-    emissions.delete('1.0', tk.END)    
-    
+     
     if best_alt == origFOT:
         emissions.insert(tk.END, "No better alternative available based on your preferences.")
     else:
@@ -126,6 +120,9 @@ def get_directions():
             mode = "walking"
         case "Bike":
             mode = "bicycling"
+        #case _:
+            #output.delete('1.0', tk.END)
+            #output.insert("Form of Transportation not supported")
 
     try:
         output.delete('1.0', tk.END)
@@ -133,6 +130,7 @@ def get_directions():
             directions = gmaps.directions(start, end, mode="transit", transit_mode= mode)
         else:
             directions = gmaps.directions(start, end, mode=mode)
+        
         try:
             steps = directions[0]['legs'][0]['steps']
             for step in steps:
@@ -141,9 +139,10 @@ def get_directions():
                 output.insert(tk.END, clean_instruction + '\n')
         except IndexError:
             output.insert(tk.END, "This type of transport is not available between these adresses")
+            
     except Exception as e:
         output.delete('1.0', tk.END)
-        output.insert(tk.END, f"Error: {e}")
+        output.insert(tk.END, f"Error: Invalid form of transport")
 
 # Set up GUI
 window = tk.Tk()
