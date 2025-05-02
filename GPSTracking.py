@@ -22,11 +22,13 @@ def getEmissions():
 
     start = start_entry.get()
     end = end_entry.get()
-    #APIdistance = gmaps.distance_matrix(start, end)
-    distance = 10
+
+    APIdistance = gmaps.distance_matrix(start, end)
+    dist_string = APIdistance["rows"][0]["elements"][0]["distance"]["text"]
+    both = dist_string.split()
+    distance = float(both[0])
 
     #Temporary cost values (USD)
-    #Should retrieve from API
     CostDict = {
         "Car": 15,
         "Bus": 18,
@@ -80,7 +82,7 @@ def getEmissions():
             continue
         candidates.append(mode)
 
-    emissions.delete('1.0', tk.END)   
+    emissions.delete('1.0', tk.END)
 
     if priority == "Emissions":
         best_alt = min(candidates, key=lambda m: CO2EmDict[m])
@@ -99,7 +101,7 @@ def getEmissions():
         emissions.insert(tk.END, f"Original CO2 Emissions: {CO2EmDict[origFOT]:.2f} lbs\n")
         emissions.insert(tk.END, f"Alternative CO2 Emissions: {CO2EmDict[best_alt]:.2f} lbs\n")
         emissions.insert(tk.END, f"Cost Save: ${(origCost - CostDict[best_alt]):.2f}\n")
-        emissions.insert(tk.END, f'Time Save: {(origTime - TimeDict[best_alt]):.2f} minutes\n')
+        emissions.insert(tk.END, f'Time Save: {(origTime - TimeDict[best_alt])*10:.2f} minutes\n')
 
 def get_directions():
     start = start_entry.get()
